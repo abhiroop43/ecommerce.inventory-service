@@ -1,6 +1,8 @@
 package dev.abhiroopsantra.inventoryservice.controller;
 
 import dev.abhiroopsantra.inventoryservice.dto.ApiResponse;
+import dev.abhiroopsantra.inventoryservice.dto.CheckOrderAvailabilityDto;
+import dev.abhiroopsantra.inventoryservice.dto.ItemsRequest;
 import dev.abhiroopsantra.inventoryservice.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,10 +17,10 @@ import java.util.HashMap;
 public class InventoryController {
     private final InventoryService inventoryService;
 
-    @GetMapping("/{skuCode}")
+    @PostMapping("/checkItemsAvailability")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<ApiResponse> checkIfProductIsInStock(@PathVariable String skuCode) {
-        boolean isAvailable = inventoryService.checkIfProductIsInStock(skuCode);
+    public ResponseEntity<ApiResponse> checkItemsAvailability(@RequestBody CheckOrderAvailabilityDto checkOrderAvailabilityRequest) {
+        boolean isAvailable = inventoryService.checkItemsAvailability(checkOrderAvailabilityRequest);
         ApiResponse response = new ApiResponse();
         HashMap<String, Object> data = new HashMap<>();
         data.put("isAvailable", isAvailable);

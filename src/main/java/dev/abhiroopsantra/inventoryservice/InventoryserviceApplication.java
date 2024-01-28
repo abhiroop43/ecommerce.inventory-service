@@ -17,17 +17,23 @@ import org.springframework.context.annotation.Bean;
     @Bean
     public CommandLineRunner loadData(InventoryRepository inventoryRepository) {
         return (args) -> {
-            Inventory inventory1 = new Inventory();
-            inventory1.setSkuCode("ABC123");
-            inventory1.setQuantity(100);
+            inventoryRepository.findBySkuCode("ABC123").ifPresentOrElse(
+                    inventory -> {
+                        System.out.println("Inventory with skuCode ABC123 already exists");
+                    },
+                    () -> {
+                        Inventory inventory = new Inventory();
+                        inventory.setSkuCode("ABC123");
+                        inventory.setQuantity(100);
 
-            inventoryRepository.save(inventory1);
+                        Inventory inventory2 = new Inventory();
+                        inventory2.setSkuCode("ABC124");
+                        inventory2.setQuantity(0);
 
-            Inventory inventory2 = new Inventory();
-            inventory2.setSkuCode("ABC124");
-            inventory2.setQuantity(0);
-
-            inventoryRepository.save(inventory2);
+                        inventoryRepository.save(inventory);
+                        inventoryRepository.save(inventory2);
+                    }
+            );
         };
     }
 }
