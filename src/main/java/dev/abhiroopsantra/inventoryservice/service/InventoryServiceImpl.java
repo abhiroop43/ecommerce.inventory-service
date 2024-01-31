@@ -43,6 +43,6 @@ import java.util.Optional;
             throw new NotFoundException("Product with skuCode %s not found".formatted(itemRequest.getSkuCode()));
         }
         return InventoryResponse.builder().skuCode(itemRequest.getSkuCode())
-                                .isInStock(foundInventory.get().getQuantity() > itemRequest.getQuantity()).build();
+                                .inStock(foundInventory.get().getQuantity() > itemRequest.getQuantity()).build();
     }
 }
