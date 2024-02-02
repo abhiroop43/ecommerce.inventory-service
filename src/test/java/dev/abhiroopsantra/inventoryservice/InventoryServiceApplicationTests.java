@@ -3,7 +3,7 @@ package dev.abhiroopsantra.inventoryservice;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest class InventoryserviceApplicationTests {
+@SpringBootTest class InventoryServiceApplicationTests {
 
     @Test void contextLoads() {
     }
