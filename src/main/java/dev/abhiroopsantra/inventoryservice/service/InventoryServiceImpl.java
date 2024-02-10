@@ -7,16 +7,22 @@ import dev.abhiroopsantra.inventoryservice.exception.NotFoundException;
 import dev.abhiroopsantra.inventoryservice.model.Inventory;
 import dev.abhiroopsantra.inventoryservice.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service @RequiredArgsConstructor public class InventoryServiceImpl implements InventoryService {
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class InventoryServiceImpl implements InventoryService {
     private final InventoryRepository inventoryRepository;
 
-    @Override @Transactional(readOnly = true) public boolean checkIfProductIsInStock(String skuCode) {
+    @Override
+    @Transactional(readOnly = true)
+    public boolean checkIfProductIsInStock(String skuCode) {
         Optional<Inventory> foundInventory = inventoryRepository.findBySkuCode(skuCode);
 
         if (foundInventory.isEmpty()) {
@@ -26,8 +32,16 @@ import java.util.Optional;
         return foundInventory.get().getQuantity() > 0;
     }
 
-    @Override @Transactional(readOnly = true)
+    @Override
+    @Transactional(readOnly = true)
     public List<InventoryResponse> checkItemsAvailability(CheckOrderAvailabilityDto checkOrderAvailabilityRequest) {
+//        log.info("Wait started");
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        log.info("Wait ended");
         return checkOrderAvailabilityRequest.getItems().stream().map(this::checkIfItemRequestIsInStock).toList();
     }
 
@@ -43,6 +57,6 @@ import java.util.Optional;
             throw new NotFoundException("Product with skuCode %s not found".formatted(itemRequest.getSkuCode()));
         }
         return InventoryResponse.builder().skuCode(itemRequest.getSkuCode())
-                                .inStock(foundInventory.get().getQuantity() > itemRequest.getQuantity()).build();
+                .inStock(foundInventory.get().getQuantity() > itemRequest.getQuantity()).build();
     }
 }
